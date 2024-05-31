@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -8,7 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthRequestModel } from './models/authRequestModel';
-import { SignInUseCase } from 'src/modules/auth/useCases/signInUseCase/signInUseCase';
+import { SignInUseCase } from './../../../../modules/auth/useCases/signInUseCase/signInUseCase';
 import { LocalAuthGuard } from './guards/localAuth.guard';
 import { Public } from './decorators/isPublic';
 

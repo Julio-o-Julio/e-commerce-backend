@@ -1,8 +1,8 @@
 import { ValidateUserUseCase } from './validateUserUseCase';
-import { UserRepositoryInMemory } from 'src/modules/user/repositories/UserRepositoryInMemory';
 import { hash } from 'bcrypt';
-import { makeUser } from 'src/modules/user/factories/userFactory';
 import { UnauthorizedException } from '@nestjs/common';
+import { UserRepositoryInMemory } from './../../../../modules/user/repositories/UserRepositoryInMemory';
+import { makeUser } from './../../../../modules/user/factories/userFactory';
 
 let validateUserUseCase: ValidateUserUseCase;
 let userRepositoryInMemory: UserRepositoryInMemory;

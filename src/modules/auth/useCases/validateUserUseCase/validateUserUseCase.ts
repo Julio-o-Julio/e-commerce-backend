@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
-import { UserRepository } from 'src/modules/user/repositories/UserRepository';
+import { UserRepository } from './../../../../modules/user/repositories/UserRepository';
 
 interface ValidateUserRequest {
   email: string;

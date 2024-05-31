@@ -1,7 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { SignInUseCase } from './signInUseCase';
-import { makeUser } from 'src/modules/user/factories/userFactory';
 import { UserPayload } from '../../models/userPayload';
+import { makeUser } from './../../../../modules/user/factories/userFactory';
 
 let signInUseCase: SignInUseCase;
 let jwtService: JwtService;
