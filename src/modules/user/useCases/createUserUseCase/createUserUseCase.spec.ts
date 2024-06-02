@@ -13,7 +13,7 @@ describe('Create User', () => {
   });
 
   it('Deve ser capaz de criar um User', async () => {
-    expect(userRepositoryInMemory.users).toEqual([]);
+    expect(userRepositoryInMemory.users).toHaveLength(0);
 
     const user = await createUserUseCase.execute(makeUser({}));
 

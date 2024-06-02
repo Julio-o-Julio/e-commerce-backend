@@ -14,7 +14,10 @@ export class Address {
   private _id: string;
 
   constructor(
-    props: Replace<AddressProps, { description?: string; createdAt?: Date }>,
+    props: Replace<
+      AddressProps,
+      { description?: string | null; createdAt?: Date }
+    >,
     id?: string,
   ) {
     this.props = {
