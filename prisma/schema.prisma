@@ -8,9 +8,20 @@ datasource db {
 }
 
 model User {
-  id        String   @id
-  email     String   @unique
+  id        String    @id
+  email     String    @unique
   name      String
   password  String
   createdAt DateTime
+  Address   Address[]
+}
+
+model Address {
+  id          String   @id
+  postalCode  String
+  houseNumber Int
+  Description String?
+  createdAt   DateTime
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
 }
