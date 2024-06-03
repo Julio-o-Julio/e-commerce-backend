@@ -2,12 +2,14 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { CreateUserBody } from './dtos/createUserBody';
 import { UserViewModel } from './viewModel/userViewModel';
 import { CreateUserUseCase } from './../../../../modules/user/useCases/createUserUseCase/createUserUseCase';
+import { Public } from '../auth/decorators/isPublic';
 
 @Controller('user')
 export class UserController {
   constructor(private createUserUseCase: CreateUserUseCase) {}
 
   @Post()
+  @Public()
   async createUser(@Body() userBody: CreateUserBody) {
     const { name, email, password } = userBody;
 

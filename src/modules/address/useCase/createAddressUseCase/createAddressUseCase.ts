@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { Address } from '../../entities/Address';
 import { AddressRepository } from '../../reposiories/AddressRepository';
 
@@ -8,6 +9,7 @@ interface CreateAddressRequest {
   userId: string;
 }
 
+@Injectable()
 export class CreateAddressUseCase {
   constructor(private addressRepository: AddressRepository) {}
 

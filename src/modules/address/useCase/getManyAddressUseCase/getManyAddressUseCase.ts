@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { AddressRepository } from '../../reposiories/AddressRepository';
 
 interface GetManyAddressRequest {
@@ -6,6 +7,7 @@ interface GetManyAddressRequest {
   perPage?: string;
 }
 
+@Injectable()
 export class GetManyAddressUseCase {
   constructor(private addressRepository: AddressRepository) {}
 

@@ -20,7 +20,7 @@ model Address {
   id          String   @id
   postalCode  String
   houseNumber Int
-  Description String?
+  description String?
   createdAt   DateTime
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String

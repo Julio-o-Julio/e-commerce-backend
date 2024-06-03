@@ -1,4 +1,8 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AddressRepository } from '../../reposiories/AddressRepository';
 
 interface UpdateAddressRequest {
@@ -9,6 +13,7 @@ interface UpdateAddressRequest {
   userId: string;
 }
 
+@Injectable()
 export class UpdateAddressUseCase {
   constructor(private addressRepository: AddressRepository) {}
 
