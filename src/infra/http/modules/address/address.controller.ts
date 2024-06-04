@@ -19,7 +19,7 @@ import { CreateAddressBody } from './dtos/createAddressBody';
 import { AddressViewModel } from './viewModel/addressViewModel';
 import { UpdateAddressBody } from './dtos/updateAddressBody';
 
-@Controller('address')
+@Controller('addresses')
 export class AddressController {
   constructor(
     private createAddressUseCase: CreateAddressUseCase,
