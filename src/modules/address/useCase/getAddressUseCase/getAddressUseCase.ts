@@ -1,9 +1,7 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AddressRepository } from '../../reposiories/AddressRepository';
+import { AddressNotFoundException } from '../../exceptions/AddressNotFoundException';
+import { AddressWithoutPermissionException } from '../../exceptions/AddressWithoutPermissionException';
 
 interface GetAddressRequest {
   addressId: string;
@@ -17,9 +15,10 @@ export class GetAddressUseCase {
   async execute({ addressId, userId }: GetAddressRequest) {
     const address = await this.addressRepository.findById(addressId);
 
-    if (!address) throw new NotFoundException();
+    if (!address) throw new AddressNotFoundException();
 
-    if (address.userId != userId) throw new UnauthorizedException();
+    if (address.userId != userId)
+      throw new AddressWithoutPermissionException({ actionName: 'recuperar' });
 
     return address;
   }

@@ -1,15 +1,18 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmptyCustom } from '../../../classValidator/decorators/IsNotEmptyCustom';
+import { IsStringCustom } from '../../../classValidator/decorators/IsStringCustom';
+import { IsIntCustom } from '../../../classValidator/decorators/IsIntCustom';
+import { IsOptional } from 'class-validator';
 
 export class UpdateAddressBody {
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmptyCustom()
+  @IsStringCustom()
   postalCode: string;
 
-  @IsNotEmpty()
-  @IsInt()
+  @IsNotEmptyCustom()
+  @IsIntCustom()
   houseNumber: number;
 
   @IsOptional()
-  @IsString()
+  @IsStringCustom()
   description?: string;
 }

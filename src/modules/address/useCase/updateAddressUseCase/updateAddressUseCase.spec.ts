@@ -1,8 +1,9 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { makeUser } from '../../../user/factories/userFactory';
 import { makeAddress } from '../../factories/addressFactory';
 import { AddressRepositoryInMemory } from '../../reposiories/AddressRepositoryInMemory';
 import { UpdateAddressUseCase } from './updateAddressUseCase';
+import { AddressNotFoundException } from '../../exceptions/AddressNotFoundException';
+import { AddressWithoutPermissionException } from '../../exceptions/AddressWithoutPermissionException';
 
 let addressRepositoryInMemory: AddressRepositoryInMemory;
 let updateAddressUseCase: UpdateAddressUseCase;
@@ -56,7 +57,7 @@ describe('Update Address', () => {
         description: 'Apto 99',
         userId: user.id,
       });
-    }).rejects.toThrow(NotFoundException);
+    }).rejects.toThrow(AddressNotFoundException);
   });
 
   it('Deve ser capaz de retornar um erro quando o User não for o responsável pelo endereço', async () => {
@@ -73,6 +74,6 @@ describe('Update Address', () => {
         description: 'Apto 99',
         userId: 'fakeUserId',
       });
-    }).rejects.toThrow(UnauthorizedException);
+    }).rejects.toThrow(AddressWithoutPermissionException);
   });
 });

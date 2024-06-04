@@ -1,9 +1,7 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AddressRepository } from '../../reposiories/AddressRepository';
+import { AddressWithoutPermissionException } from '../../exceptions/AddressWithoutPermissionException';
+import { AddressNotFoundException } from '../../exceptions/AddressNotFoundException';
 
 interface UpdateAddressRequest {
   addressId: string;
@@ -26,9 +24,10 @@ export class UpdateAddressUseCase {
   }: UpdateAddressRequest) {
     const address = await this.addressRepository.findById(addressId);
 
-    if (!address) throw new NotFoundException();
+    if (!address) throw new AddressNotFoundException();
 
-    if (address.userId != userId) throw new UnauthorizedException();
+    if (address.userId != userId)
+      throw new AddressWithoutPermissionException({ actionName: 'atualizar' });
 
     address.postalCode = postalCode;
     address.houseNumber = houseNumber;
