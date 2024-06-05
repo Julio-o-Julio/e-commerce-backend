@@ -23,4 +23,8 @@ export class PrismaUserRepository implements UserRepository {
 
     return PrismaUserMapper.toDomain(user);
   }
+
+  async update(user: User): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 }

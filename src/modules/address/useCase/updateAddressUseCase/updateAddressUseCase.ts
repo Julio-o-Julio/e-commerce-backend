@@ -7,7 +7,7 @@ interface UpdateAddressRequest {
   addressId: string;
   postalCode: string;
   houseNumber: number;
-  description?: string;
+  description?: string | null;
   userId: string;
 }
 

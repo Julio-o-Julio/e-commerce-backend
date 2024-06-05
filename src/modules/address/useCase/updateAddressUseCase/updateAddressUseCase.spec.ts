@@ -2,8 +2,8 @@ import { makeUser } from '../../../user/factories/userFactory';
 import { makeAddress } from '../../factories/addressFactory';
 import { AddressRepositoryInMemory } from '../../reposiories/AddressRepositoryInMemory';
 import { UpdateAddressUseCase } from './updateAddressUseCase';
-import { AddressNotFoundException } from '../../exceptions/AddressNotFoundException';
-import { AddressWithoutPermissionException } from '../../exceptions/AddressWithoutPermissionException';
+import { AddressNotFoundException } from '../../exceptions/addressNotFoundException';
+import { AddressWithoutPermissionException } from '../../exceptions/addressWithoutPermissionException';
 
 let addressRepositoryInMemory: AddressRepositoryInMemory;
 let updateAddressUseCase: UpdateAddressUseCase;
