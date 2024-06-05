@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AddressRepository } from '../../reposiories/AddressRepository';
-import { AddressNotFoundException } from '../../exceptions/AddressNotFoundException';
-import { AddressWithoutPermissionException } from '../../exceptions/AddressWithoutPermissionException';
+import { AddressNotFoundException } from './../../exceptions/addressNotFoundException';
+import { AddressWithoutPermissionException } from './../../exceptions/addressWithoutPermissionException';
 
 interface GetAddressRequest {
   addressId: string;

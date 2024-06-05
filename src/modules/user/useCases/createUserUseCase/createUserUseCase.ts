@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../repositories/UserRepository';
 import { User } from '../../entities/User';
 import { hash } from 'bcrypt';
-import { UserWithSameEmailException } from '../../exceptions/UserWithSameEmailException';
+import { UserWithSameEmailException } from './../../exceptions/userWithSameEmailException';
 
 interface CreateUserRequest {
   name: string;
