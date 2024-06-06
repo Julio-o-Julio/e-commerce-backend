@@ -25,10 +25,15 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async update(user: User): Promise<void> {
-    throw new Error('Method not implemented.');
+    const userRaw = PrismaUserMapper.toPrisma(user);
+
+    await this.prisma.user.update({
+      data: userRaw,
+      where: { id: userRaw.id },
+    });
   }
 
   async delete(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.prisma.user.delete({ where: { id } });
   }
 }
