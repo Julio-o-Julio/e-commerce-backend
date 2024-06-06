@@ -40,11 +40,13 @@ export class UserController {
   ) {
     const { name } = body;
 
-    await this.updateUserNameUseCase.execute({
+    const user = await this.updateUserNameUseCase.execute({
       id: request.user.id,
       name,
       email: request.user.email,
     });
+
+    return UserViewModel.toHttp(user);
   }
 
   @Put('updatePassword')

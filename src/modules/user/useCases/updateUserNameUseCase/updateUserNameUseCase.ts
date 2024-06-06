@@ -17,7 +17,7 @@ export class UpdateUserNameUseCase {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) throw new UserNotFoundException();
-    
+
     if (user.id != id)
       throw new UserWithoutPermissionException({ actionName: 'atualizar' });
 
