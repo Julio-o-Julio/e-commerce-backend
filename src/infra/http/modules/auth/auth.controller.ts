@@ -28,9 +28,4 @@ export class AuthController {
       access_token,
     };
   }
-
-  /* @Get('test')
-  async test(@Request() request: AuthenticatedRequestModel) {
-    return request.user;
-  } */
 }
