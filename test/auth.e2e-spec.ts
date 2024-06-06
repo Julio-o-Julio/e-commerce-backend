@@ -65,5 +65,82 @@ describe('Auth Controller (e2e)', () => {
 
       accessToken = responseSignin.body.access_token;
     });
+
+    it('Deve ser capaz de retornar um erro quando tentar fazer login e o email do User estiver errado', async () => {
+      // Tenta efetuar o login e espera um status code 401 (UNAUTHORIZED)
+      const responseSignIn = await request(app.getHttpServer())
+        .post('/signin')
+        .send({
+          email: 'FakeEmail@gmail.com',
+          password: createUserBody.password,
+        })
+        .expect(401);
+
+      // Testa se a resposta do login tem um campo message
+      expect(responseSignIn.body).toHaveProperty('message');
+      // Testa se o campo message da resposta do login é "Email ou senha incorretos"
+      expect(responseSignIn.body.message).toEqual('Email ou senha incorretos');
+    });
+
+    it('Deve ser capaz de retornar um erro quando tentar fazer login e a senha do User estiver errada', async () => {
+      // Tenta efetuar o login e espera um status code 401 (UNAUTHORIZED)
+      const responseSignIn = await request(app.getHttpServer())
+        .post('/signin')
+        .send({
+          email: createUserBody.email,
+          password: 'FakePassword',
+        })
+        .expect(401);
+
+      // Testa se a resposta do login tem um campo message
+      expect(responseSignIn.body).toHaveProperty('message');
+      // Testa se o campo message da resposta do login é "Email ou senha incorretos"
+      expect(responseSignIn.body.message).toEqual('Email ou senha incorretos');
+    });
+
+    it('Deve ser capaz de retornar um erro quando tentar alterar o nome de um User e o access_token do User estiver incorreto ou expirado', async () => {
+      // Tenta alterar o nome de um User e espera um status code 401 (UNAUTHORIZED)
+      const response = await request(app.getHttpServer())
+        .put('/user/updatename')
+        .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
+        .expect(401);
+
+      // Testa se a resposta da requisição tem um campo message
+      expect(response.body).toHaveProperty('message');
+      // Testa se o campo message da resposta da requisição é "Access token expirado ou inválido"
+      expect(response.body.message).toEqual(
+        'Access token expirado ou inválido',
+      );
+    });
+
+    it('Deve ser capaz de retornar um erro quando tentar alterar a senha de um User e o access_token do User estiver incorreto ou expirado', async () => {
+      // Tenta alterar a senha de um User e espera um status code 401 (UNAUTHORIZED)
+      const response = await request(app.getHttpServer())
+        .put('/user/updatepassword')
+        .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
+        .expect(401);
+
+      // Testa se a resposta da requisição tem um campo message
+      expect(response.body).toHaveProperty('message');
+      // Testa se o campo message da resposta da requisição é "Access token expirado ou inválido"
+      expect(response.body.message).toEqual(
+        'Access token expirado ou inválido',
+      );
+    });
+
+    it('Deve ser capaz de retornar um erro quando tentar deletar um User e o access_token do User estiver incorreto ou expirado', async () => {
+      // Tenta deletar um User e espera um status code 401 (UNAUTHORIZED)
+      const response = await request(app.getHttpServer())
+        .delete('/user')
+        .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
+        .expect(401);
+
+      // Testa se a resposta da requisição tem um campo message
+      expect(response.body).toHaveProperty('message');
+      // Testa se o campo message da resposta da requisição é "Access token expirado ou inválido"
+      expect(response.body.message).toEqual(
+        'Access token expirado ou inválido',
+      );
+    });
   });
 });
