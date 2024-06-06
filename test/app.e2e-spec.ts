@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { ValidationError } from 'class-validator';
+import { IncorrectValuesException } from '../src/exceptions/incorrectValuesException';
+import { mapperClassValidationErrorToAppException } from '../src/utils/mappers';
 
 describe('App Controller (e2e)', () => {
   let app: INestApplication;
@@ -12,6 +15,17 @@ describe('App Controller (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        exceptionFactory(errors: ValidationError[]) {
+          throw new IncorrectValuesException({
+            fields: mapperClassValidationErrorToAppException(errors),
+          });
+        },
+      }),
+    );
+
     await app.init();
   });
 
