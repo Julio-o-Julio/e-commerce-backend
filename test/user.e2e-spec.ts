@@ -54,7 +54,7 @@ describe('User Controller (e2e)', () => {
     const responseSignIn = await request(app.getHttpServer())
       .post('/signin')
       .send({
-        email: 'newuser@gmail.com',
+        email: 'NewUser@gmail.com',
         password: user.password,
       });
 
@@ -72,7 +72,7 @@ describe('User Controller (e2e)', () => {
     it('Deve ser capaz de criar um User', async () => {
       const createNewUserBody = {
         name: user.name,
-        email: 'newuser@gmail.com',
+        email: 'NewUser@gmail.com',
         password: user.password,
       };
 

@@ -15,7 +15,7 @@ describe('Auth Controller (e2e)', () => {
   const user = makeUser({});
   const createUserBody = {
     name: user.name,
-    email: 'userauth@gmail.com',
+    email: 'AuthEmail@gmail.com',
     password: user.password,
   };
 
