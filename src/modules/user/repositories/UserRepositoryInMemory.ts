@@ -22,4 +22,7 @@ export class UserRepositoryInMemory implements UserRepository {
 
     if (userIndex >= 0) this.users[userIndex] = user;
   }
+  async delete(id: string): Promise<void> {
+    this.users = this.users.filter((user) => user.id != id);
+  }
 }

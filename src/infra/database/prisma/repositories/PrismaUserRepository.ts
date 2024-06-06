@@ -27,4 +27,8 @@ export class PrismaUserRepository implements UserRepository {
   async update(user: User): Promise<void> {
     throw new Error('Method not implemented.');
   }
+
+  async delete(id: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 }

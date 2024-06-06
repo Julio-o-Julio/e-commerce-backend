@@ -1,32 +1,37 @@
+import { compare, hash } from 'bcrypt';
 import { UserNotFoundException } from '../../exceptions/userNotFoundException';
 import { UserWithoutPermissionException } from '../../exceptions/userWithoutPermissionException';
 import { makeUser } from '../../factories/userFactory';
 import { UserRepositoryInMemory } from '../../repositories/UserRepositoryInMemory';
-import { UpdateUserNameUseCase } from './updateUserNameUseCase';
+import { UpdateUserPasswordUseCase } from './updateUserPasswordUseCase';
 
 let userRepositoryInMemory: UserRepositoryInMemory;
-let updateUserNameUseCase: UpdateUserNameUseCase;
+let updateUserPasswordUseCase: UpdateUserPasswordUseCase;
 
-describe('Update User Name', () => {
+describe('Update User Password', () => {
   beforeEach(() => {
     userRepositoryInMemory = new UserRepositoryInMemory();
-    updateUserNameUseCase = new UpdateUserNameUseCase(userRepositoryInMemory);
+    updateUserPasswordUseCase = new UpdateUserPasswordUseCase(
+      userRepositoryInMemory,
+    );
   });
 
-  it('Deve ser capaz de atualizar o campo name de um User', async () => {
+  it('Deve ser capaz de atualizar o campo password de um User', async () => {
     const user = makeUser({});
 
     userRepositoryInMemory.users = [user];
 
-    const nameChanged = 'Nome Alterado';
+    const oldPassword = user.password;
 
-    await updateUserNameUseCase.execute({
+    await updateUserPasswordUseCase.execute({
       id: user.id,
-      name: nameChanged,
       email: user.email,
+      password: await hash('FakePassword', 12),
     });
 
-    expect(userRepositoryInMemory.users[0].name).toEqual(nameChanged);
+    const userHasPasswordEncrypted = await compare(oldPassword, user.password);
+
+    expect(userHasPasswordEncrypted).toBeFalsy();
   });
 
   it('Deve ser capaz de retornar um erro quando User não existir', async () => {
@@ -35,10 +40,10 @@ describe('Update User Name', () => {
 
       userRepositoryInMemory.users = [user];
 
-      await updateUserNameUseCase.execute({
+      await updateUserPasswordUseCase.execute({
         id: user.id,
-        name: 'Nome Alterado',
         email: 'FakeUserEmail@gmail.com',
+        password: await hash('FakePassword', 12),
       });
     }).rejects.toThrow(UserNotFoundException);
   });
@@ -49,10 +54,10 @@ describe('Update User Name', () => {
 
       userRepositoryInMemory.users = [user];
 
-      await updateUserNameUseCase.execute({
+      await updateUserPasswordUseCase.execute({
         id: 'FakeUserId',
-        name: 'Nome Alterado',
         email: user.email,
+        password: await hash('FakePassword', 12),
       });
     }).rejects.toThrow(UserWithoutPermissionException);
   });

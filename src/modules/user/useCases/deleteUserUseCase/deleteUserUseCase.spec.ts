@@ -2,31 +2,28 @@ import { UserNotFoundException } from '../../exceptions/userNotFoundException';
 import { UserWithoutPermissionException } from '../../exceptions/userWithoutPermissionException';
 import { makeUser } from '../../factories/userFactory';
 import { UserRepositoryInMemory } from '../../repositories/UserRepositoryInMemory';
-import { UpdateUserNameUseCase } from './updateUserNameUseCase';
+import { DeleteUserUseCase } from './deleteUserUseCase';
 
 let userRepositoryInMemory: UserRepositoryInMemory;
-let updateUserNameUseCase: UpdateUserNameUseCase;
+let deleteUserUseCase: DeleteUserUseCase;
 
-describe('Update User Name', () => {
+describe('Delete User', () => {
   beforeEach(() => {
     userRepositoryInMemory = new UserRepositoryInMemory();
-    updateUserNameUseCase = new UpdateUserNameUseCase(userRepositoryInMemory);
+    deleteUserUseCase = new DeleteUserUseCase(userRepositoryInMemory);
   });
 
-  it('Deve ser capaz de atualizar o campo name de um User', async () => {
+  it('Deve ser capaz de deletar um User', async () => {
     const user = makeUser({});
 
     userRepositoryInMemory.users = [user];
 
-    const nameChanged = 'Nome Alterado';
-
-    await updateUserNameUseCase.execute({
+    await deleteUserUseCase.execute({
       id: user.id,
-      name: nameChanged,
       email: user.email,
     });
 
-    expect(userRepositoryInMemory.users[0].name).toEqual(nameChanged);
+    expect(userRepositoryInMemory.users).toHaveLength(0);
   });
 
   it('Deve ser capaz de retornar um erro quando User não existir', async () => {
@@ -35,10 +32,9 @@ describe('Update User Name', () => {
 
       userRepositoryInMemory.users = [user];
 
-      await updateUserNameUseCase.execute({
+      await deleteUserUseCase.execute({
         id: user.id,
-        name: 'Nome Alterado',
-        email: 'FakeUserEmail@gmail.com',
+        email: 'FakeEmail@gmail.com',
       });
     }).rejects.toThrow(UserNotFoundException);
   });
@@ -49,9 +45,8 @@ describe('Update User Name', () => {
 
       userRepositoryInMemory.users = [user];
 
-      await updateUserNameUseCase.execute({
+      await deleteUserUseCase.execute({
         id: 'FakeUserId',
-        name: 'Nome Alterado',
         email: user.email,
       });
     }).rejects.toThrow(UserWithoutPermissionException);

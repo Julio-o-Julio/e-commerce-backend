@@ -3,28 +3,23 @@ import { UserRepository } from '../../repositories/UserRepository';
 import { UserNotFoundException } from '../../exceptions/userNotFoundException';
 import { UserWithoutPermissionException } from '../../exceptions/userWithoutPermissionException';
 
-interface UpdateUserNameRequest {
+interface DeleteUserRequest {
   id: string;
-  name: string;
   email: string;
 }
 
 @Injectable()
-export class UpdateUserNameUseCase {
+export class DeleteUserUseCase {
   constructor(private userRepository: UserRepository) {}
 
-  async execute({ id, name, email }: UpdateUserNameRequest) {
+  async execute({ id, email }: DeleteUserRequest) {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) throw new UserNotFoundException();
-    
+
     if (user.id != id)
-      throw new UserWithoutPermissionException({ actionName: 'atualizar' });
+      throw new UserWithoutPermissionException({ actionName: 'deletar' });
 
-    user.name = name;
-
-    await this.userRepository.update(user);
-
-    return user;
+    await this.userRepository.delete(id);
   }
 }
