@@ -29,7 +29,26 @@
 ## Installation
 
 ```bash
+# Cloning repository
+$ git clone https://github.com/Julio-o-Julio/e-commerce-backend/
+
+# Install dependences
 $ npm install
+
+# Deploy prisma migrations
+$ npx prisma migrate deploy
+
+# Generate prisma
+$ npx prisma generate
+
+# Don't forget to create a .env file in the project root and fill in the required environment variables in the .env.exemple file
+# Without the .env file configured correctly, the project will not work
+# Example of a valid .env file:
+
+DATABASE_URL="file:./dev.db"
+
+JWT_SECRET="88SuperSecretJWTKey"
+JWT_EXPIRE="1 days"
 ```
 
 ## Running the app
