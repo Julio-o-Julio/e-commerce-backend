@@ -21,7 +21,7 @@ export class CreateUserUseCase {
 
     const user = new User({
       name,
-      email,
+      email: email.toLowerCase(),
       password: await hash(password, 12),
     });
 

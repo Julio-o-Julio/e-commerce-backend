@@ -82,13 +82,15 @@ export class AddressController {
   ) {
     const { postalCode, houseNumber, description } = body;
 
-    await this.updateAddressUseCase.execute({
+    const address = await this.updateAddressUseCase.execute({
       addressId,
       postalCode,
       houseNumber,
       description,
       userId: request.user.id,
     });
+
+    return AddressViewModel.toHttp(address);
   }
 
   @Delete(':id')

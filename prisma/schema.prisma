@@ -13,7 +13,7 @@ model User {
   name      String
   password  String
   createdAt DateTime
-  Address   Address[]
+  addresses Address[]
 }
 
 model Address {

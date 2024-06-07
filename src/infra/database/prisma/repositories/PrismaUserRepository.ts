@@ -12,12 +12,17 @@ export class PrismaUserRepository implements UserRepository {
     const userRaw = PrismaUserMapper.toPrisma(user);
 
     await this.prisma.user.create({
-      data: userRaw,
+      data: {
+        ...userRaw,
+        email: userRaw.email.toLowerCase(),
+      },
     });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
 
     if (!user) return null;
 

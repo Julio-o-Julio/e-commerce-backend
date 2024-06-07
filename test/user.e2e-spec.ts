@@ -84,8 +84,10 @@ describe('User Controller (e2e)', () => {
 
       // Testa se todos os campos do User foi criado corretamente
       expect(response.body).toHaveProperty('id');
-      expect(response.body.email).toBe(createNewUserBody.email);
-      expect(response.body.name).toBe(createNewUserBody.name);
+      expect(response.body.email).toEqual(
+        createNewUserBody.email.toLowerCase(),
+      );
+      expect(response.body.name).toEqual(createNewUserBody.name);
       expect(response.body).toHaveProperty('createdAt');
     });
   });
