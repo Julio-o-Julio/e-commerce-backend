@@ -90,6 +90,53 @@ describe('User Controller (e2e)', () => {
       expect(response.body.name).toEqual(createNewUserBody.name);
       expect(response.body).toHaveProperty('createdAt');
     });
+
+    const testCases = [
+      {
+        description: 'quando o campo name não for informado',
+        createNewUserBody: {
+          email: 'NewUser@gmail.com',
+          password: user.password,
+        },
+        expectedField: 'name',
+        expectedMessage: 'O campo name é obrigatório',
+      },
+      {
+        description: 'quando o campo email não for informado',
+        createNewUserBody: {
+          name: user.name,
+          password: user.password,
+        },
+        expectedField: 'email',
+        expectedMessage: 'O campo email é obrigatório',
+      },
+      {
+        description: 'quando o campo password não for informado',
+        createNewUserBody: {
+          name: user.name,
+          email: 'NewUser@gmail.com',
+        },
+        expectedField: 'password',
+        expectedMessage: 'O campo password é obrigatório',
+      },
+    ];
+
+    testCases.forEach(
+      ({ description, createNewUserBody, expectedField, expectedMessage }) => {
+        it(`Não deve ser capaz de criar um User ${description}`, async () => {
+          const response = await request(app.getHttpServer())
+            .post('/user')
+            .send(createNewUserBody)
+            .expect(400);
+
+          // Testa se as mensagens do erro estão corretas
+          expect(response.body).toHaveProperty('message');
+          expect(response.body.message).toEqual('Dados inválidos');
+          expect(response.body).toHaveProperty('fields');
+          expect(response.body.fields[expectedField]).toEqual(expectedMessage);
+        });
+      },
+    );
   });
 
   describe('PUT /user/updatename', () => {
@@ -98,7 +145,6 @@ describe('User Controller (e2e)', () => {
 
       const updateUserNameBody = {
         name: nameChanged,
-        email: user.email,
       };
 
       // Altera o nome do User e espera um status code 200 (OK)
@@ -111,6 +157,22 @@ describe('User Controller (e2e)', () => {
       // Testa se o nome foi alterado corretamente
       expect(response.body.name).toEqual(nameChanged);
     });
+
+    it('Não deve ser capaz de atualizar o nome de um User quando o campo name não for informado', async () => {
+      const response = await request(app.getHttpServer())
+        .put('/user/updatename')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({})
+        .expect(400);
+
+      // Testa se as mensagens do erro estão corretas
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toEqual('Dados inválidos');
+      expect(response.body).toHaveProperty('fields');
+      expect(response.body.fields['name']).toEqual(
+        'O campo name é obrigatório',
+      );
+    });
   });
 
   describe('PUT /user/updatepassword', () => {
@@ -118,7 +180,6 @@ describe('User Controller (e2e)', () => {
       const passwordChanged = 'SenhaAlterada';
 
       const updateUserPasswordBody = {
-        email: user.email,
         password: passwordChanged,
       };
 
@@ -135,6 +196,22 @@ describe('User Controller (e2e)', () => {
         .send(updateUserPasswordBody)
         .expect(200);
     });
+
+    it('Não deve ser capaz de atualizar a senha de um User quando o campo password não for informado', async () => {
+      const response = await request(app.getHttpServer())
+        .put('/user/updatepassword')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({})
+        .expect(400);
+
+      // Testa se as mensagens do erro estão corretas
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toEqual('Dados inválidos');
+      expect(response.body).toHaveProperty('fields');
+      expect(response.body.fields['password']).toEqual(
+        'O campo password é obrigatório',
+      );
+    });
   });
 
   describe('DELETE /user', () => {
@@ -144,6 +221,12 @@ describe('User Controller (e2e)', () => {
         .delete('/user')
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
+
+      // Tenta deletar um User e espera um status code 404 (NOT_FOUND)
+      await request(app.getHttpServer())
+        .delete('/user')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(404);
     });
   });
 });

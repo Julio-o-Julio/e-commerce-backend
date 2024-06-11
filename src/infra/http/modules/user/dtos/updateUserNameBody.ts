@@ -2,7 +2,7 @@ import { IsNotEmptyCustom } from '../../../classValidator/decorators/IsNotEmptyC
 import { IsStringCustom } from '../../../classValidator/decorators/IsStringCustom';
 
 export class UpdateUserNameBody {
-  @IsNotEmptyCustom()
   @IsStringCustom()
+  @IsNotEmptyCustom()
   name: string;
 }

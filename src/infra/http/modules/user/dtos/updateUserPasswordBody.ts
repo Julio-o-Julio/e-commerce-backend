@@ -3,8 +3,8 @@ import { IsStringCustom } from '../../../classValidator/decorators/IsStringCusto
 import { MinLengthCustom } from '../../../classValidator/decorators/MinLengthCustom';
 
 export class UpdateUserPasswordBody {
-  @IsNotEmptyCustom()
-  @IsStringCustom()
   @MinLengthCustom(8)
+  @IsStringCustom()
+  @IsNotEmptyCustom()
   password: string;
 }
