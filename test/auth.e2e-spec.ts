@@ -97,7 +97,9 @@ describe('Auth Controller (e2e)', () => {
       // Testa se o campo message da resposta do login é "Email ou senha incorretos"
       expect(responseSignIn.body.message).toEqual('Email ou senha incorretos');
     });
+  });
 
+  describe('PUT /user/*', () => {
     it('Deve ser capaz de retornar um erro quando tentar alterar o nome de um User e o access_token do User estiver incorreto ou expirado', async () => {
       // Tenta alterar o nome de um User e espera um status code 401 (UNAUTHORIZED)
       const response = await request(app.getHttpServer())
@@ -127,11 +129,147 @@ describe('Auth Controller (e2e)', () => {
         'Access token expirado ou inválido',
       );
     });
+  });
 
+  describe('DELETE /user', () => {
     it('Deve ser capaz de retornar um erro quando tentar deletar um User e o access_token do User estiver incorreto ou expirado', async () => {
       // Tenta deletar um User e espera um status code 401 (UNAUTHORIZED)
       const response = await request(app.getHttpServer())
         .delete('/user')
+        .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
+        .expect(401);
+
+      // Testa se a resposta da requisição tem um campo message
+      expect(response.body).toHaveProperty('message');
+      // Testa se o campo message da resposta da requisição é "Access token expirado ou inválido"
+      expect(response.body.message).toEqual(
+        'Access token expirado ou inválido',
+      );
+    });
+  });
+
+  describe('POST /addresses', () => {
+    it('Deve ser capaz de retornar um erro quando tentar criar um Address e o access_token do User estiver incorreto ou expirado', async () => {
+      const createNewAddressBody = {
+        postalCode: '88888-888',
+        houseNumber: 88,
+      };
+
+      // Tenta criar um Address e espera um status code 401 (UNAUTHORIZED)
+      const response = await request(app.getHttpServer())
+        .post('/addresses')
+        .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
+        .send(createNewAddressBody)
+        .expect(401);
+
+      // Testa se a resposta da requisição tem um campo message
+      expect(response.body).toHaveProperty('message');
+      // Testa se o campo message da resposta da requisição é "Access token expirado ou inválido"
+      expect(response.body.message).toEqual(
+        'Access token expirado ou inválido',
+      );
+    });
+  });
+
+  describe('GET /addresses/:id', () => {
+    it('Deve ser capaz de retornar um erro quando tentar recuperar um Address e o access_token do User estiver incorreto ou expirado', async () => {
+      const createNewAddressBody = {
+        postalCode: '88888-888',
+        houseNumber: 88,
+      };
+
+      // Cria um Address e espera um status code 201 (CREATED)
+      const responseCreateAddress = await request(app.getHttpServer())
+        .post('/addresses')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(createNewAddressBody)
+        .expect(201);
+
+      // Tenta recuperar um Address e espera um status code 401 (UNAUTHORIZED)
+      const response = await request(app.getHttpServer())
+        .get(`/addresses/${responseCreateAddress.body.id}`)
+        .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
+        .expect(401);
+
+      // Testa se a resposta da requisição tem um campo message
+      expect(response.body).toHaveProperty('message');
+      // Testa se o campo message da resposta da requisição é "Access token expirado ou inválido"
+      expect(response.body.message).toEqual(
+        'Access token expirado ou inválido',
+      );
+    });
+  });
+
+  describe('GET MANY /addresses', () => {
+    it('Deve ser capaz de retornar um erro quando tentar recuperar todos os Address e o access_token do User estiver incorreto ou expirado', async () => {
+      // Tenta recuperar todos os Address e espera um status code 401 (UNAUTHORIZED)
+      const response = await request(app.getHttpServer())
+        .get('/addresses')
+        .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
+        .expect(401);
+
+      // Testa se a resposta da requisição tem um campo message
+      expect(response.body).toHaveProperty('message');
+      // Testa se o campo message da resposta da requisição é "Access token expirado ou inválido"
+      expect(response.body.message).toEqual(
+        'Access token expirado ou inválido',
+      );
+    });
+  });
+
+  describe('PUT /addresses/:id', () => {
+    it('Deve ser capaz de retornar um erro quando tentar alterar um Address e o access_token do User estiver incorreto ou expirado', async () => {
+      const createNewAddressBody = {
+        postalCode: '88888-888',
+        houseNumber: 88,
+      };
+
+      const updateNewAddressBody = {
+        postalCode: '11111-111',
+        houseNumber: 11,
+        description: 'Apto 1',
+      };
+
+      // Cria um Address e espera um status code 201 (CREATED)
+      const responseCreateAddress = await request(app.getHttpServer())
+        .post('/addresses')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(createNewAddressBody)
+        .expect(201);
+
+      // Tenta alterar um Address e espera um status code 401 (UNAUTHORIZED)
+      const response = await request(app.getHttpServer())
+        .put(`/addresses/${responseCreateAddress.body.id}`)
+        .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
+        .send(updateNewAddressBody)
+        .expect(401);
+
+      // Testa se a resposta da requisição tem um campo message
+      expect(response.body).toHaveProperty('message');
+      // Testa se o campo message da resposta da requisição é "Access token expirado ou inválido"
+      expect(response.body.message).toEqual(
+        'Access token expirado ou inválido',
+      );
+    });
+  });
+
+  describe('DELETE /addresses/:id', () => {
+    it('Deve ser capaz de retornar um erro quando tentar deletar um Address e o access_token do User estiver incorreto ou expirado', async () => {
+      const createNewAddressBody = {
+        postalCode: '88888-888',
+        houseNumber: 88,
+      };
+
+      // Cria um Address e espera um status code 201 (CREATED)
+      const responseCreateAddress = await request(app.getHttpServer())
+        .post('/addresses')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(createNewAddressBody)
+        .expect(201);
+
+      // Tenta deletar um Address e espera um status code 401 (UNAUTHORIZED)
+      const response = await request(app.getHttpServer())
+        .delete(`/addresses/${responseCreateAddress.body.id}`)
         .set('Authorization', `Bearer ${accessToken}+FakeAccessToken`)
         .expect(401);
 
