@@ -193,7 +193,7 @@ describe('User Controller (e2e)', () => {
       // Faz o login usando a senha nova e espera um status code 200 (OK)
       await request(app.getHttpServer())
         .post('/signin')
-        .send(updateUserPasswordBody)
+        .send({ email: user.email, password: passwordChanged })
         .expect(200);
     });
 
