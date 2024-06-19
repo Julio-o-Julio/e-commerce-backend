@@ -1,4 +1,4 @@
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import { UserRepositoryInMemory } from '../../repositories/UserRepositoryInMemory';
 import { CreateUserUseCase } from './createUserUseCase';
 import { makeUser } from '../../factories/userFactory';

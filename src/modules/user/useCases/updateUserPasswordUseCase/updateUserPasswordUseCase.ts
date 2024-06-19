@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../repositories/UserRepository';
 import { UserNotFoundException } from '../../exceptions/userNotFoundException';
 import { UserWithoutPermissionException } from '../../exceptions/userWithoutPermissionException';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 
 interface UpdateUserPasswordRequest {
   id: string;

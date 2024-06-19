@@ -1,5 +1,5 @@
 import { ValidateUserUseCase } from './validateUserUseCase';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { UserRepositoryInMemory } from './../../../../modules/user/repositories/UserRepositoryInMemory';
 import { makeUser } from './../../../../modules/user/factories/userFactory';
 import { AuthValueIncorrectException } from '../../exceptions/authValueIncorrectException';

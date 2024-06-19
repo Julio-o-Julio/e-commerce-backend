@@ -1,4 +1,4 @@
-import { compare, hash } from 'bcrypt';
+import { compare, hash } from 'bcryptjs';
 import { UserNotFoundException } from '../../exceptions/userNotFoundException';
 import { UserWithoutPermissionException } from '../../exceptions/userWithoutPermissionException';
 import { makeUser } from '../../factories/userFactory';
