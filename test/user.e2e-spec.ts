@@ -90,6 +90,53 @@ describe('User Controller (e2e)', () => {
       expect(response.body.name).toEqual(createNewUserBody.name);
       expect(response.body).toHaveProperty('createdAt');
     });
+
+    const testCases = [
+      {
+        description: 'quando o campo name não for informado',
+        createNewUserBody: {
+          email: 'NewUser@gmail.com',
+          password: user.password,
+        },
+        expectedField: 'name',
+        expectedMessage: 'O campo name é obrigatório',
+      },
+      {
+        description: 'quando o campo email não for informado',
+        createNewUserBody: {
+          name: user.name,
+          password: user.password,
+        },
+        expectedField: 'email',
+        expectedMessage: 'O campo email é obrigatório',
+      },
+      {
+        description: 'quando o campo password não for informado',
+        createNewUserBody: {
+          name: user.name,
+          email: 'NewUser@gmail.com',
+        },
+        expectedField: 'password',
+        expectedMessage: 'O campo password é obrigatório',
+      },
+    ];
+
+    testCases.forEach(
+      ({ description, createNewUserBody, expectedField, expectedMessage }) => {
+        it(`Não deve ser capaz de criar um User ${description}`, async () => {
+          const response = await request(app.getHttpServer())
+            .post('/user')
+            .send(createNewUserBody)
+            .expect(400);
+
+          // Testa se as mensagens do erro estão corretas
+          expect(response.body).toHaveProperty('message');
+          expect(response.body.message).toEqual('Dados inválidos');
+          expect(response.body).toHaveProperty('fields');
+          expect(response.body.fields[expectedField]).toEqual(expectedMessage);
+        });
+      },
+    );
   });
 
   describe('PUT /user/updatename', () => {
@@ -98,7 +145,6 @@ describe('User Controller (e2e)', () => {
 
       const updateUserNameBody = {
         name: nameChanged,
-        email: user.email,
       };
 
       // Altera o nome do User e espera um status code 200 (OK)
@@ -111,6 +157,41 @@ describe('User Controller (e2e)', () => {
       // Testa se o nome foi alterado corretamente
       expect(response.body.name).toEqual(nameChanged);
     });
+
+    const testCases = [
+      {
+        description: 'quando o campo name não for informado',
+        updateUserNameBody: {},
+        expectedField: 'name',
+        expectedMessage: 'O campo name é obrigatório',
+      },
+      {
+        description: 'quando o campo name não for uma string',
+        updateUserNameBody: {
+          name: 2,
+        },
+        expectedField: 'name',
+        expectedMessage: 'O campo name deve ser um texto',
+      },
+    ];
+
+    testCases.forEach(
+      ({ description, updateUserNameBody, expectedField, expectedMessage }) => {
+        it(`Não deve ser capaz de atualizar o nome de um User ${description}`, async () => {
+          const response = await request(app.getHttpServer())
+            .put('/user/updatename')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send(updateUserNameBody)
+            .expect(400);
+
+          // Testa se as mensagens do erro estão corretas
+          expect(response.body).toHaveProperty('message');
+          expect(response.body.message).toEqual('Dados inválidos');
+          expect(response.body).toHaveProperty('fields');
+          expect(response.body.fields[expectedField]).toEqual(expectedMessage);
+        });
+      },
+    );
   });
 
   describe('PUT /user/updatepassword', () => {
@@ -118,7 +199,6 @@ describe('User Controller (e2e)', () => {
       const passwordChanged = 'SenhaAlterada';
 
       const updateUserPasswordBody = {
-        email: user.email,
         password: passwordChanged,
       };
 
@@ -132,9 +212,73 @@ describe('User Controller (e2e)', () => {
       // Faz o login usando a senha nova e espera um status code 200 (OK)
       await request(app.getHttpServer())
         .post('/signin')
-        .send(updateUserPasswordBody)
+        .send({ email: user.email, password: passwordChanged })
         .expect(200);
     });
+
+    it('Não deve ser capaz de atualizar a senha de um User quando o campo password não for informado', async () => {
+      const response = await request(app.getHttpServer())
+        .put('/user/updatepassword')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({})
+        .expect(400);
+
+      // Testa se as mensagens do erro estão corretas
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toEqual('Dados inválidos');
+      expect(response.body).toHaveProperty('fields');
+      expect(response.body.fields['password']).toEqual(
+        'O campo password é obrigatório',
+      );
+    });
+
+    const testCases = [
+      {
+        description: 'quando o campo password não for informado',
+        updatePasswordBody: {},
+        expectedField: 'password',
+        expectedMessage: 'O campo password é obrigatório',
+      },
+      {
+        description: 'quando o campo password não for uma string',
+        updateUserPasswordBody: {
+          password: 22222222,
+        },
+        expectedField: 'password',
+        expectedMessage: 'O campo password deve ser um texto',
+      },
+      {
+        description: 'quando o campo password não tiver no mínimo 8 caracteres',
+        updateUserPasswordBody: {
+          password: 'senha',
+        },
+        expectedField: 'password',
+        expectedMessage: 'O campo password deve ter no mínimo 8 caracteres',
+      },
+    ];
+
+    testCases.forEach(
+      ({
+        description,
+        updateUserPasswordBody,
+        expectedField,
+        expectedMessage,
+      }) => {
+        it(`Não deve ser capaz de atualizar a senha de um User ${description}`, async () => {
+          const response = await request(app.getHttpServer())
+            .put('/user/updatepassword')
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send(updateUserPasswordBody)
+            .expect(400);
+
+          // Testa se as mensagens do erro estão corretas
+          expect(response.body).toHaveProperty('message');
+          expect(response.body.message).toEqual('Dados inválidos');
+          expect(response.body).toHaveProperty('fields');
+          expect(response.body.fields[expectedField]).toEqual(expectedMessage);
+        });
+      },
+    );
   });
 
   describe('DELETE /user', () => {
@@ -144,6 +288,12 @@ describe('User Controller (e2e)', () => {
         .delete('/user')
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
+
+      // Tenta deletar um User e espera um status code 404 (NOT_FOUND)
+      await request(app.getHttpServer())
+        .delete('/user')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(404);
     });
   });
 });

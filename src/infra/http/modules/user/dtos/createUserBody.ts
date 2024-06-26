@@ -4,17 +4,17 @@ import { IsNotEmptyCustom } from '../../../classValidator/decorators/IsNotEmptyC
 import { IsEmailCustom } from '../../../classValidator/decorators/IsEmailCustom';
 
 export class CreateUserBody {
-  @IsNotEmptyCustom()
   @IsStringCustom()
+  @IsNotEmptyCustom()
   name: string;
 
-  @IsNotEmptyCustom()
-  @IsStringCustom()
   @IsEmailCustom()
+  @IsStringCustom()
+  @IsNotEmptyCustom()
   email: string;
 
-  @IsNotEmptyCustom()
-  @IsStringCustom()
   @MinLengthCustom(8)
+  @IsStringCustom()
+  @IsNotEmptyCustom()
   password: string;
 }
